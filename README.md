@@ -59,13 +59,18 @@ python run_experiments.py
 
 ## 📊 Benchmark Results
 
-| Model | Accuracy | PNEUMONIA Recall (Sensitivity) | NORMAL Recall | Test Loss |
-| --- | --- | --- | --- | --- |
-| **Simple CNN** | 77.88% | 0.95 | 0.50 | 0.8516 |
-| **ResNet50** | 83.33% | 0.96 | 0.61 | 1.0329 |
-| **CheX-DS** | **85.26%** | **0.99** | **0.63** | **0.2856** |
+We benchmarked three architectures on a standard CPU environment to evaluate the trade-off between training cost and medical accuracy.
 
-**Key Insight:** The CheX-DS model minimizes False Negatives (missing sick patients) better than any other model, making it ideal for medical screening.
+| Model | Accuracy | Test Loss | Training Time (CPU) | PNEUMONIA Recall (Sensitivity) | NORMAL Recall |
+| :--- | :--- | :--- | :--- | :--- | :--- |
+| **Simple CNN** | 77.88% | 0.8516 | ~34 min | 0.95 | 0.50 |
+| **ResNet50** | 83.33% | 1.0329 | ~2.5 hours | 0.96 | 0.61 |
+| **CheX-DS** | **85.26%** | **0.2856** | **~9.3 hours** | **0.99** | **0.63** |
+
+**Key Takeaways:**
+* **Reliability:** **CheX-DS** achieves the lowest Test Loss (0.2856), indicating high confidence in its predictions compared to ResNet (1.03).
+* **Sensitivity:** With a **99% Pneumonia Recall**, CheX-DS is the most safe and effective model for screening, minimizing dangerous False Negatives.
+* **Cost vs. Performance:** While CheX-DS requires significantly more training time (~9.3h vs ~34m), the gain in safety and accuracy is critical for medical applications.
 
 ## Usage
 
