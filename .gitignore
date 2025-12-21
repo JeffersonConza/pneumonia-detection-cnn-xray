@@ -1,0 +1,19 @@
+# Python temporary files
+__pycache__/
+*.py[cod]
+*$py.class
+venv/
+.env
+
+# Data and Models (Too large for Git)
+data/
+models/*.pth
+
+# IDE settings
+.idea/
+.vscode/
+*.swp
+
+# OS generated files
+.DS_Store
+Thumbs.db
