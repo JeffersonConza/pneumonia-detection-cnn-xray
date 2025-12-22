@@ -2,7 +2,7 @@
 
 This project implements a state-of-the-art modular Deep Learning pipeline for detecting Pneumonia from Chest X-Rays. 
 
-It features the **CheX-DS** architecture (DenseNet121 + Swin Transformer Ensemble) and uses a **Weighted Asymmetric Loss** to handle class imbalance, achieving **99% Sensitivity (Recall)** on pneumonia cases.
+It features the **CheX-DS** architecture (DenseNet121 + Swin Transformer Ensemble) and uses a **Weighted Asymmetric Loss** to handle class imbalance, achieving around **99% Sensitivity (Recall)** on pneumonia cases.
 
 ## Architectures Implemented
 1.  **Simple CNN**: Lightweight custom baseline.
@@ -14,6 +14,8 @@ It features the **CheX-DS** architecture (DenseNet121 + Swin Transformer Ensembl
 pneumonia-detection-modular/
 ├── data/               # Dataset (Auto-downloaded)
 ├── models/             # Saved weights (excluded from git)
+├── notebooks/          # Interactive Demos
+│   └── demo.ipynb      # Visual inference playground
 ├── src/
 │   ├── config.py       # Hyperparameters & Hardware settings
 │   ├── model.py        # Model Architectures (CheXDS, ResNet, CNN)
@@ -83,3 +85,7 @@ To generate Confusion Matrix and ROC Curves:
 ```bash
 python visualize_results.py
 ```
+
+Interactive Demo
+
+For a visual walkthrough without terminal commands, run the Jupyter Notebook `demo.ipynb`.
