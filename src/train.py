@@ -6,7 +6,7 @@ from src.config import *
 from src.utils import EarlyStopping
 
 
-# --- CheX-DS Specific Loss Function [cite: 446-447] ---
+# --- CheX-DS Specific Loss Function ---
 class CheXDSLoss(nn.Module):
     """
     Combines Weighted BCE and Asymmetric Loss.
@@ -15,7 +15,7 @@ class CheXDSLoss(nn.Module):
 
     def __init__(self, class_ratios, gamma_pos=1, gamma_neg=4, m=0.05):
         super(CheXDSLoss, self).__init__()
-        # rho is ratio of positive samples [cite: 437]
+        # rho: ratio of positive samples
         self.rho = torch.tensor(class_ratios).to(DEVICE)
         self.gamma_pos = gamma_pos
         self.gamma_neg = gamma_neg
@@ -29,11 +29,11 @@ class CheXDSLoss(nn.Module):
         # Convert scalar targets to One-Hot
         targets = torch.nn.functional.one_hot(targets, num_classes=logits.size(1)).float()
 
-        # 1. Calculate Weights w_i [cite: 437]
+        # 1. Calculate Weights w_i
         # w_i = y_i * e^(1-rho) + (1-y_i) * e^rho
         w = targets * torch.exp(1 - self.rho) + (1 - targets) * torch.exp(self.rho)
 
-        # 2. Asymmetric Terms [cite: 442-443]
+        # 2. Asymmetric Terms
         # p_m = max(p - m, 0)
         p_m = torch.clamp(probs - self.m, min=0.0)
 
@@ -49,7 +49,7 @@ class CheXDSLoss(nn.Module):
 
 
 def calculate_class_ratios(loader):
-    """Calculates rho (ratio of positive samples) for Eq. 1[cite: 437]."""
+    """Calculates rho (ratio of positive samples)."""
     print("Calculating class ratios for CheX-DS Loss...")
     total = 0
     # Access underlying dataset safely
