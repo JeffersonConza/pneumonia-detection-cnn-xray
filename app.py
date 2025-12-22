@@ -165,7 +165,7 @@ with col_left:
     
     if uploaded_file is not None:
         image = Image.open(uploaded_file)
-        st.image(image, caption='Uploaded X-Ray', use_container_width=True)
+        st.image(image, caption='Uploaded X-Ray', width='stretch')
         
         if show_image_details:
             with st.expander("📋 Image Details", expanded=True):

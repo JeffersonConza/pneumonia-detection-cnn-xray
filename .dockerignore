@@ -1,0 +1,11 @@
+# Ignore Data (Too big for the image)
+data/
+
+# Ignore Environment (We will build a fresh one inside)
+venv/
+venv_test/
+.git/
+.idea/
+__pycache__/
+*.pyc
+.DS_Store
