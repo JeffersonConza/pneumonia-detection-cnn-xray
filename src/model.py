@@ -61,7 +61,7 @@ class CheXDS(nn.Module):
     def __init__(self, num_classes=2, fine_tune=False):
         super(CheXDS, self).__init__()
 
-        # --- Branch 1: DenseNet121 [cite: 324] ---
+        # --- Branch 1: DenseNet121---
         weights_dense = models.DenseNet121_Weights.DEFAULT
         self.densenet = models.densenet121(weights=weights_dense)
 
@@ -77,7 +77,7 @@ class CheXDS(nn.Module):
             nn.Linear(32, num_classes)
         )
 
-        # --- Branch 2: Swin Transformer Base [cite: 324] ---
+        # --- Branch 2: Swin Transformer Base---
         # Note: Swin-B is large. Ensure your GPU has enough VRAM.
         weights_swin = models.Swin_B_Weights.DEFAULT
         self.swin = models.swin_b(weights=weights_swin)
@@ -118,7 +118,7 @@ class CheXDS(nn.Module):
         # Normalize ensemble weights to ensure they sum to 1
         w = torch.nn.functional.softmax(self.ensemble_weights, dim=0)
 
-        # Weighted Ensemble [cite: 471]
+        # Weighted Ensemble
         out = w[0] * out_dense + w[1] * out_swin
         return out
 
@@ -126,7 +126,7 @@ class CheXDS(nn.Module):
         """
         Unfreezes the last blocks of both models for fine-tuning.
         """
-        # Unfreeze DenseNet last block [cite: 381]
+        # Unfreeze DenseNet last block
         for param in self.densenet.features.denseblock4.parameters():
             param.requires_grad = True
         for param in self.densenet.features.norm5.parameters():
