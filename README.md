@@ -37,7 +37,7 @@ pneumonia-detection-modular/
 ```bash
 # Clone repo
 git clone https://github.com/JeffersonConza/pneumonia-detection-cnn-xray.git
-cd pneumonia-detection-modular
+cd pneumonia-detection-cnn-xray
 
 # Install dependencies
 pip install -r requirements.txt
