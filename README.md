@@ -89,3 +89,13 @@ python visualize_results.py
 Interactive Demo
 
 For a visual walkthrough without terminal commands, run the Jupyter Notebook `demo.ipynb`.
+
+
+## 📄 References
+
+This project implements the architecture and loss function proposed in the following paper:
+
+**CheX-DS: Improving Chest X-ray Image Classification with Ensemble Learning Based on DenseNet and Swin Transformer** *Xinran Li, Yu Liu, Xiujuan Xu, Xiaowei Zhao* arXiv:2505.11168 [cs.CV], May 2025.
+
+* **Architecture:** Ensemble of DenseNet121 (CNN) and Swin Transformer (ViT) to leverage the advantages of both local and global features.
+* **Loss Function:** A combination of Weighted Binary Cross-Entropy and Asymmetric Loss to effectively address data imbalance (long-tail distribution).
