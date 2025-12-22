@@ -24,6 +24,7 @@ pneumonia-detection-modular/
 │   └── evaluate.py     # Evaluation metrics
 ├── main.py             # CLI Entry point
 ├── run_experiments.py  # Automated benchmarking script
+├── app.py              # Streamlit Web Interface
 ├── inference.py        # Single image prediction
 └── visualize_results.py # Confusion Matrix & ROC generation
 ```
@@ -90,6 +91,13 @@ Interactive Demo
 
 For a visual walkthrough without terminal commands, run the Jupyter Notebook `demo.ipynb`.
 
+## 🌐 Web Interface (Streamlit)
+For a user-friendly graphical dashboard, run the web app:
+```bash
+streamlit run app.py
+```
+
+![Streamlit Interface](demo_screenshot.png)
 
 ## 📄 References
 
