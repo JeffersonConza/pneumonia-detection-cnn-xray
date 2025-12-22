@@ -43,7 +43,7 @@ def get_data_loaders():
     val_size = int(total_size * VAL_SPLIT)
     train_size = total_size - val_size
 
-    # Use generator with fixed seed for reproducibility [cite: 30]
+    # Use generator with fixed seed for reproducibility
     generator = torch.Generator().manual_seed(SEED)
     train_dataset, val_dataset = random_split(
         full_train_dataset,
@@ -52,11 +52,11 @@ def get_data_loaders():
     )
 
     # IMPORTANT: Apply non-augmented transform to validation set
-    # (By default, subsets inherit the transform of the parent. We override it here.)
-    # Note: In standard PyTorch, this is tricky with random_split.
-    # For simplicity in this project, we keep the transforms attached to the dataset.
-    # Ideally, we would create a custom Dataset wrapper, but for now:
-    # We will accept that validation might have slight augmentation or we use a clean loading approach below.
+    #   by default, subsets inherit the transform of the parent. We override it here.
+    # In standard PyTorch, this is tricky with random_split.
+    #   For simplicity in this project, we keep the transforms attached to the dataset.
+    #   Ideally we would create a custom Dataset wrapper, but for now
+    #   will accept that validation might have slight augmentation or we use a clean loading approach below.
 
     # Cleaner Approach for Val Set Transform:
     # We reload the same folder with val_transform and use the same indices.
@@ -66,10 +66,10 @@ def get_data_loaders():
     test_dataset = datasets.ImageFolder(root=TEST_DIR, transform=val_tf)
 
     print(f"Stats: {len(train_dataset)} Train, {len(val_dataset)} Val, {len(test_dataset)} Test images.")
-    print(f"Classes: {full_train_dataset.classes}")  # ['NORMAL', 'PNEUMONIA'] [cite: 54]
+    print(f"Classes: {full_train_dataset.classes}")  # ['NORMAL', 'PNEUMONIA']
 
     # 4. Create DataLoaders
-    # num_workers=0 is safer for Windows. If it's slow, try 2.
+    # num_workers=2 if it's slow
     train_loader = DataLoader(train_dataset, batch_size=BATCH_SIZE, shuffle=True, num_workers=0)
     val_loader = DataLoader(val_dataset, batch_size=BATCH_SIZE, shuffle=False, num_workers=0)
     test_loader = DataLoader(test_dataset, batch_size=BATCH_SIZE, shuffle=False, num_workers=0)
