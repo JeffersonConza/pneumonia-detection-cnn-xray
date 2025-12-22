@@ -120,7 +120,7 @@ def train_model(model, train_loader, val_loader, model_type='cnn'):
     # Select Loss Function
     if model_type == 'chexds':
         class_ratios = calculate_class_ratios(train_loader)
-        # Using hyperparameters from [cite: 521]
+        # Using hyperparameters
         criterion = CheXDSLoss(class_ratios, gamma_pos=1, gamma_neg=4, m=0.05)
     else:
         criterion = nn.CrossEntropyLoss()
