@@ -24,13 +24,12 @@ TEST_DIR = os.path.join(DATA_DIR, 'test')
 MODEL_SAVE_PATH = os.path.join(BASE_DIR, 'models', 'pneumonia_model.pth')
 
 # --- Hyperparameters ---
-# From Notebook [cite: 21, 26, 30]
 IMG_SIZE = 256
 BATCH_SIZE = 32         # Reduced from 128 to ensure stability on local PCs
 SEED = 417
 VAL_SPLIT = 0.20        # 20% of training data goes to validation
 
-# Training settings [cite: 161, 165, 216]
+# Training settings
 EPOCHS_CNN = 15
 EPOCHS_RESNET = 10
 LR_CNN = 0.001
