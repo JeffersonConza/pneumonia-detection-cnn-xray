@@ -6,7 +6,7 @@ from src.config import MODEL_SAVE_PATH
 class EarlyStopping:
     """
     Stops training if validation loss doesn't improve after a given patience.
-    Replicates Keras 'restore_best_weights=True' [cite: 194-195].
+    Replicates Keras 'restore_best_weights=True'.
     """
 
     def __init__(self, patience=3, verbose=False, path=MODEL_SAVE_PATH):
