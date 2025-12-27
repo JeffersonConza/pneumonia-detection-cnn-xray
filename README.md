@@ -78,6 +78,18 @@ We benchmarked three architectures on a standard CPU environment to evaluate the
 - **Sensitivity:** With a **99% Pneumonia Recall**, CheX-DS is the most safe and effective model for screening, minimizing dangerous False Negatives.
 - **Cost vs. Performance:** While CheX-DS requires significantly more training time (~9.3h vs ~34m), the gain in safety and accuracy is critical for medical applications.
 
+## 📊 Model Performance
+The CheX-DS ensemble (DenseNet121 + Swin Transformer) was evaluated on the Test set (Normal 234 + Pneumonia 390).
+
+### Confusion Matrix
+The model minimizes False Negatives (Critical for medical diagnosis).
+![Confusion Matrix](results/confusion_matrix.png)
+
+### ROC Curve
+The model achieves a high Area Under Curve (AUC), demonstrating strong capability in distinguishing between Pneumonia and Normal cases.
+![ROC Curve](results/roc_curve.png)
+
+
 ## 💻 Usage
 
 ### Command Line Inference
