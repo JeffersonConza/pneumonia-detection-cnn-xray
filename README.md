@@ -86,8 +86,8 @@ The model minimizes False Negatives (Critical for medical diagnosis).
 ![Confusion Matrix](results/confusion_matrix.png)
 
 ### ROC Curve
-The model achieves a high Area Under Curve (AUC), demonstrating strong capability in distinguishing between Pneumonia and Normal cases.
-![ROC Curve](results/roc_curve.png)
+ROC curve for the CheX-DS model (AUC = 0.97), showing strong distinguishing between Pneumonia and Normal cases.
+![ROC Curve](results/roc_curve.png).
 
 
 ## 💻 Usage
