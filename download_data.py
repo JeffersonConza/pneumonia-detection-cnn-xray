@@ -4,8 +4,17 @@ import tarfile
 from tqdm import tqdm
 
 DATA_URL = "https://dsserver-prod-resources-1.s3.amazonaws.com/cnn/xray_dataset.tar.gz"
-BASE_DIR = os.path.dirname(os.path.abspath(__file__))
-DATA_DIR = os.path.join(BASE_DIR, 'data')
+
+# Detect if running in Google Colab to choose download directory
+import sys
+IS_COLAB = 'google.colab' in sys.modules or os.path.exists('/content')
+
+if IS_COLAB:
+    DATA_DIR = '/content/data'
+else:
+    BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+    DATA_DIR = os.path.join(BASE_DIR, 'data')
+
 TAR_PATH = os.path.join(DATA_DIR, 'xray_dataset.tar.gz')
 
 

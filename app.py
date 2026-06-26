@@ -48,7 +48,12 @@ def load_model():
     """
     if not os.path.exists(MODEL_SAVE_PATH):
         st.error(f"❌ Model weight file not found at: `{MODEL_SAVE_PATH}`")
-        st.info("💡 Please run `python main.py --model chexds` to train the model first.")
+        st.info(
+            "💡 **No trained model weights found locally.**\n\n"
+            "1. Train the model on Google Colab first using **pneumonia_detection_colab.ipynb**.\n"
+            "2. Once training completes, download the generated **pneumonia_model.pth** file from your Google Drive.\n"
+            "3. Move the downloaded file into your local **models/** folder to run this app."
+        )
         st.stop()
 
     try:
@@ -106,6 +111,7 @@ with st.sidebar:
         st.info(f"**Python:** {sys.version.split()[0]}")
         st.info(f"**PyTorch:** {torch.__version__}")
         st.info(f"**CUDA Available:** {torch.cuda.is_available()}")
+        st.info(f"**Model Path:** `{MODEL_SAVE_PATH}`")
     
     st.divider()
     

@@ -71,6 +71,28 @@ Or run the full benchmark suite (CNN → ResNet → CheX-DS):
 python run_experiments.py
 ```
 
+## ☁️ Google Colab (GPU Training)
+
+Since training deep learning models (especially the **CheX-DS** ensemble) takes a long time on CPU (~9.3 hours), it is highly recommended to train the models in Google Colab (taking only ~10-15 minutes using a GPU).
+
+The project is configured to run on Google Colab using Google Drive for storage and Colab's local scratch disk for maximum I/O performance (bypassing Google Drive network file-reading bottlenecks).
+
+### Setup Instructions:
+
+1. **Upload Project**: Upload this project directory (`pneumonia-detection-cnn-xray/`) to your Google Drive so its path is `My Drive/pneumonia-detection-cnn-xray`.
+   > [!WARNING]
+   > **Do NOT upload the `data/` or virtual env (`venv/`) directories!**
+   > - The dataset `data/` (1.2 GB+) is downloaded and extracted directly to Colab's fast local scratch disk inside the notebook, so uploading it is unnecessary and wastes space.
+   > - Excluding these directories will allow your project upload to take only **a few seconds** instead of hours.
+2. **Open Notebook**: Open the Google Colab master notebook located at [pneumonia_detection_colab.ipynb](file:///c:/Users/jconza/Documents/pneumonia-detection-cnn-xray/notebooks/pneumonia_detection_colab.ipynb).
+3. **Change Runtime to GPU**: In Google Colab, go to **Runtime** -> **Change runtime type** -> Select **GPU** (T4, L4, or A100) -> Click **Save**.
+4. **Run Cells**: Execute the cells step-by-step:
+   - **Mount Google Drive**: Mounts Drive to `/content/drive`.
+   - **Workspace Setup**: Navigates to the drive folder and loads dependencies.
+   - **Optimized Data Extraction**: Downloads the dataset directly to Colab's fast local scratch disk (`/content/data`) to prevent Drive network latency.
+   - **Train Model**: Runs GPU training. Checkpoints (`pneumonia_model.pth`) are saved directly to Google Drive so they are persistent.
+   - **Evaluation & Streamlit**: Evaluate model performance and optionally run the Streamlit app directly from Colab.
+
 ## 📊 Benchmark Results
 
 We benchmarked three architectures on a standard CPU environment to evaluate the trade-off between training cost and medical accuracy.

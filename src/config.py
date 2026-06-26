@@ -13,9 +13,28 @@ else:
 print(f"Using device: {DEVICE}")
 
 # --- Paths ---
-# We use abspath to ensure it works regardless of where you run the command from
-BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-DATA_DIR = os.path.join(BASE_DIR, 'data', 'chest_xray')
+# Detect if running in Google Colab to optimize file I/O speed
+import sys
+IS_COLAB = 'google.colab' in sys.modules or os.path.exists('/content')
+
+if IS_COLAB:
+    # Use fast local scratch disk for dataset reading (resolves Google Drive network latency bottleneck)
+    DATA_DIR = '/content/data/chest_xray'
+    
+    # Try to use Google Drive for persistent storage of models and results
+    drive_project_dir = '/content/drive/MyDrive/pneumonia-detection-cnn-xray'
+    if os.path.exists('/content/drive/MyDrive'):
+        BASE_DIR = drive_project_dir
+    else:
+        BASE_DIR = '/content'
+else:
+    # Local execution
+    BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+    DATA_DIR = os.path.join(BASE_DIR, 'data', 'chest_xray')
+
+# Ensure output directories exist
+os.makedirs(os.path.join(BASE_DIR, 'models'), exist_ok=True)
+os.makedirs(os.path.join(BASE_DIR, 'results'), exist_ok=True)
 
 TRAIN_DIR = os.path.join(DATA_DIR, 'train')
 TEST_DIR = os.path.join(DATA_DIR, 'test')

@@ -5,9 +5,10 @@ from sklearn.metrics import confusion_matrix, classification_report, roc_curve, 
 import numpy as np
 
 # Import our modules
+import os
 from src.data_loader import get_data_loaders
 from src.model import CheXDS
-from src.config import DEVICE, MODEL_SAVE_PATH
+from src.config import DEVICE, MODEL_SAVE_PATH, BASE_DIR
 
 def plot_confusion_matrix(y_true, y_pred, classes):
     cm = confusion_matrix(y_true, y_pred)
@@ -18,6 +19,11 @@ def plot_confusion_matrix(y_true, y_pred, classes):
     plt.xlabel('Predicted Label')
     plt.ylabel('True Label')
     plt.title('Confusion Matrix (CheX-DS)')
+    
+    # Save the plot to results folder
+    save_path = os.path.join(BASE_DIR, 'results', 'confusion_matrix.png')
+    plt.savefig(save_path, bbox_inches='tight', dpi=300)
+    print(f"Saved confusion matrix plot to: {save_path}")
     plt.show()
 
 def plot_roc_curve(y_true, y_probs):
@@ -34,6 +40,11 @@ def plot_roc_curve(y_true, y_probs):
     plt.ylabel('True Positive Rate (Recall)')
     plt.title('Receiver Operating Characteristic (ROC)')
     plt.legend(loc="lower right")
+    
+    # Save the plot to results folder
+    save_path = os.path.join(BASE_DIR, 'results', 'roc_curve.png')
+    plt.savefig(save_path, bbox_inches='tight', dpi=300)
+    print(f"Saved ROC curve plot to: {save_path}")
     plt.show()
 
 def main():

@@ -1,3 +1,5 @@
+import os
+import json
 import torch
 import torch.nn as nn
 import torch.optim as optim
@@ -116,6 +118,7 @@ def validate(model, loader, criterion):
 
 def train_model(model, train_loader, val_loader, model_type='cnn'):
     model = model.to(DEVICE)
+    history = []
 
     # Select Loss Function
     if model_type == 'chexds':
@@ -149,6 +152,15 @@ def train_model(model, train_loader, val_loader, model_type='cnn'):
         val_loss, val_acc = validate(model, val_loader, criterion)
         print(f"Train Loss: {train_loss:.4f} | Acc: {train_acc:.4f} | Val Loss: {val_loss:.4f} | Acc: {val_acc:.4f}")
 
+        history.append({
+            'epoch': epoch + 1,
+            'phase': 'initial',
+            'train_loss': float(train_loss),
+            'train_acc': float(train_acc),
+            'val_loss': float(val_loss),
+            'val_acc': float(val_acc)
+        })
+
         early_stopping(val_loss, model)
         if early_stopping.early_stop:
             print("Early stopping triggered.")
@@ -177,10 +189,28 @@ def train_model(model, train_loader, val_loader, model_type='cnn'):
             val_loss, val_acc = validate(model, val_loader, criterion)
             print(f"FT Loss: {train_loss:.4f} | Acc: {train_acc:.4f} | Val Loss: {val_loss:.4f} | Acc: {val_acc:.4f}")
 
+            history.append({
+                'epoch': epoch + 1,
+                'phase': 'fine_tune',
+                'train_loss': float(train_loss),
+                'train_acc': float(train_acc),
+                'val_loss': float(val_loss),
+                'val_acc': float(val_acc)
+            })
+
             early_stopping(val_loss, model)
             if early_stopping.early_stop: break
 
         model = early_stopping.load_best_weights(model)
+
+    # Save training history JSON file to results directory
+    history_save_path = os.path.join(BASE_DIR, 'results', f'history_{model_type}.json')
+    try:
+        with open(history_save_path, 'w') as f:
+            json.dump(history, f, indent=4)
+        print(f"Training history saved to {history_save_path}")
+    except Exception as e:
+        print(f"Error saving training history: {e}")
 
     torch.save(model.state_dict(), MODEL_SAVE_PATH)
     print(f"Model saved to {MODEL_SAVE_PATH}")
