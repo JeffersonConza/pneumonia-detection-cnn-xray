@@ -16,7 +16,8 @@ pneumonia-detection-modular/
 ├── data/               # Dataset (Auto-downloaded)
 ├── models/             # Saved weights (excluded from git)
 ├── notebooks/          # Interactive Demos
-│   └── demo.ipynb      # Visual inference playground
+│   ├── demo.ipynb      # Visual inference playground
+│   └── eda.ipynb       # Exploratory Data Analysis (EDA)
 ├── src/
 │   ├── config.py       # Hyperparameters & Hardware settings
 │   ├── model.py        # Model Architectures (CheXDS, ResNet, CNN)
@@ -137,9 +138,9 @@ Generate Confusion Matrix and ROC Curves:
 python visualize_results.py
 ```
 
-### Interactive Demo
-
-For a visual walkthrough without terminal commands, run the Jupyter Notebook `demo.ipynb`.
+For interactive visual tasks without terminal commands, run the Jupyter Notebooks:
+- **demo.ipynb**: Visual inference playground (predict on random test images).
+- **eda.ipynb**: Exploratory Data Analysis (explore class ratios, image geometries, pixel histograms, and average contrast subtraction).
 
 ## 🌐 Web Interface (Streamlit)
 
