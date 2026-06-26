@@ -96,19 +96,27 @@ The project is configured to run on Google Colab using Google Drive for storage 
 
 ## 📊 Benchmark Results
 
-We benchmarked three architectures on a standard CPU environment to evaluate the trade-off between training cost and medical accuracy.
+We benchmarked three architectures across two hardware environments: standard CPU and optimized GPU (Google Colab Tesla T4 GPU).
 
-| Model | Accuracy | Test Loss | Training Time (CPU) | PNEUMONIA Recall (Sensitivity) | NORMAL Recall |
+### 🖥️ CPU Environment Benchmarks
+| Model | Accuracy | Test Loss | Training Time | PNEUMONIA Recall (Sensitivity) | NORMAL Recall |
 |:---|:---|:---|:---|:---|:---|
 | **Simple CNN** | 77.88% | 0.8516 | ~34 min | 0.95 | 0.50 |
 | **ResNet50** | 83.33% | 1.0329 | ~2.5 hours | 0.96 | 0.61 |
 | **CheX-DS** | **85.26%** | **0.2856** | **~9.3 hours** | **0.99** | **0.63** |
 
+### ⚡ GPU Environment Benchmarks (Google Colab T4 GPU)
+| Model | Accuracy | Test Loss | Training Time | Speedup vs CPU |
+|:---|:---|:---|:---|:---|
+| **Simple CNN** | 74.52% | 1.1398 | **~10.6 min** | ~3.2x |
+| **ResNet50** | **86.54%** | 0.5390 | **~16.0 min** | ~9.4x |
+| **CheX-DS** | 85.90% | **0.3982** | **~38.6 min** | **~14.5x** |
+
 **Key Takeaways:**
 
-- **Reliability:** **CheX-DS** achieves the lowest Test Loss (0.2856), indicating high confidence in its predictions compared to ResNet (1.03).
-- **Sensitivity:** With a **99% Pneumonia Recall**, CheX-DS is the most safe and effective model for screening, minimizing dangerous False Negatives.
-- **Cost vs. Performance:** While CheX-DS requires significantly more training time (~9.3h vs ~34m), the gain in safety and accuracy is critical for medical applications.
+- **GPU Acceleration:** Training the **CheX-DS** ensemble on a T4 GPU reduces training time from **~9.3 hours to ~38.6 minutes** (a massive **14.5x speedup**), making iterative research and tuning highly feasible.
+- **Model Performance:** **CheX-DS** and **ResNet50** consistently outperform the custom Simple CNN baseline. In the GPU environment, ResNet50 achieved the highest overall accuracy of **86.54%**, while CheX-DS achieved **85.90%** with a significantly lower test loss (**0.3982** vs **0.5390** for ResNet50).
+- **Safety First:** With its ensemble architecture and asymmetric loss, **CheX-DS** is optimized to minimize false negatives (critical for clinical screening), achieving high performance and low loss.
 
 ## 📊 Model Performance
 The CheX-DS ensemble (DenseNet121 + Swin Transformer) was evaluated on the Test set (Normal 234 + Pneumonia 390).
