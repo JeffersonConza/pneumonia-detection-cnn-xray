@@ -54,6 +54,15 @@ python download_data.py
 
 Train the CheX-DS model (Recommended):
 ```bash
+# General usage
+python main.py --model <model>
+
+# Available models:
+#   cnn     → Convolutional Neural Network
+#   resnet  → Residual Network
+#   chexds  → DenseNet + Swin Ensemble (Recommended)
+
+# Example Run
 python main.py --model chexds
 ```
 
