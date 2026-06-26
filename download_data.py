@@ -19,9 +19,30 @@ TAR_PATH = os.path.join(DATA_DIR, 'xray_dataset.tar.gz')
 
 
 def download_file(url, filename):
+    # Perform a HEAD request to check the expected file size
+    try:
+        head_response = requests.head(url, timeout=10)
+        expected_size = int(head_response.headers.get('content-length', 0))
+    except Exception as e:
+        print(f"Warning: HEAD request failed: {e}")
+        expected_size = 0
+
     if os.path.exists(filename):
-        print(f"File {filename} already exists. Skipping download.")
-        return
+        if expected_size > 0:
+            actual_size = os.path.getsize(filename)
+            if actual_size == expected_size:
+                print(f"File {filename} already exists and is fully downloaded. Skipping download.")
+                return
+            else:
+                print(f"File {filename} is corrupted or incomplete ({actual_size} bytes vs expected {expected_size} bytes). Deleting and re-downloading...")
+                try:
+                    os.remove(filename)
+                except Exception as e:
+                    print(f"Error removing corrupted file: {e}")
+        else:
+            # Fallback if HEAD request was unsuccessful
+            print(f"File {filename} already exists. Skipping download.")
+            return
 
     print(f"Downloading {url}...")
     response = requests.get(url, stream=True)
@@ -41,6 +62,7 @@ def download_file(url, filename):
             size = file.write(data)
             bar.update(size)
     print("Download complete.")
+
 
 
 def extract_tar_gz(file_path, output_path):
