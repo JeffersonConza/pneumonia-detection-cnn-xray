@@ -142,7 +142,10 @@ def train_model(model, train_loader, val_loader, model_type='cnn'):
     else:
         optimizer = optim.Adam(model.parameters(), lr=lr)
 
-    early_stopping = EarlyStopping(patience=3, verbose=True, path=MODEL_SAVE_PATH)
+    # Model-specific save path
+    model_save_path = os.path.join(BASE_DIR, 'models', f'pneumonia_model_{model_type}.pth')
+
+    early_stopping = EarlyStopping(patience=3, verbose=True, path=model_save_path)
 
     print(f"\n--- Starting Training: {model_type.upper()} on {DEVICE} ---")
 
@@ -181,7 +184,7 @@ def train_model(model, train_loader, val_loader, model_type='cnn'):
         else:
             optimizer_ft = optim.Adam(model.parameters(), lr=0.0001)
 
-        early_stopping = EarlyStopping(patience=3, verbose=True, path=MODEL_SAVE_PATH)
+        early_stopping = EarlyStopping(patience=3, verbose=True, path=model_save_path)
 
         for epoch in range(5):
             print(f"Fine-tune Epoch {epoch + 1}/5")
@@ -212,6 +215,11 @@ def train_model(model, train_loader, val_loader, model_type='cnn'):
     except Exception as e:
         print(f"Error saving training history: {e}")
 
+    torch.save(model.state_dict(), model_save_path)
+    print(f"Model saved to {model_save_path}")
+    
+    # Save a fallback copy to default path for backwards compatibility
     torch.save(model.state_dict(), MODEL_SAVE_PATH)
-    print(f"Model saved to {MODEL_SAVE_PATH}")
+    print(f"Default model weights updated at {MODEL_SAVE_PATH}")
+
     return model

@@ -9,8 +9,8 @@ import sys
 # Add the current directory to path to ensure imports work correctly
 sys.path.append(os.path.dirname(os.path.abspath(__file__)))
 
-from src.model import CheXDS
-from src.config import DEVICE, MODEL_SAVE_PATH, IMG_SIZE
+from src.model import SimpleCNN, TransferResNet, CheXDS
+from src.config import DEVICE, MODEL_SAVE_PATH, IMG_SIZE, BASE_DIR
 
 # --- Page Configuration ---
 st.set_page_config(
@@ -42,35 +42,51 @@ st.markdown("""
 
 # --- 1. Load Model (Cached) ---
 @st.cache_resource
-def load_model():
+def load_model(model_type):
     """
-    Loads the CheX-DS model once and caches it in memory.
+    Loads the selected model once and caches it in memory.
     """
-    if not os.path.exists(MODEL_SAVE_PATH):
-        st.error(f"❌ Model weight file not found at: `{MODEL_SAVE_PATH}`")
+    specific_path = os.path.join(BASE_DIR, 'models', f'pneumonia_model_{model_type}.pth')
+    load_path = None
+    if os.path.exists(specific_path):
+        load_path = specific_path
+    elif os.path.exists(MODEL_SAVE_PATH):
+        load_path = MODEL_SAVE_PATH
+
+    if not load_path:
+        st.error(f"❌ Model weight file not found.")
         st.info(
-            "💡 **No trained model weights found locally.**\n\n"
+            f"💡 **No trained weights found for {model_type.upper()} model.**\n\n"
             "1. Train the model on Google Colab first using **pneumonia_detection_colab.ipynb**.\n"
-            "2. Once training completes, download the generated **pneumonia_model.pth** file from your Google Drive.\n"
+            f"2. Once training completes, download the generated **pneumonia_model_{model_type}.pth** file from your Google Drive.\n"
             "3. Move the downloaded file into your local **models/** folder to run this app."
         )
         st.stop()
 
     try:
         # Initialize Architecture
-        model = CheXDS(num_classes=2)
+        if model_type == 'cnn':
+            model = SimpleCNN(num_classes=2)
+        elif model_type == 'resnet':
+            model = TransferResNet(num_classes=2)
+        else:
+            model = CheXDS(num_classes=2)
         
         # Load Weights
-        state_dict = torch.load(MODEL_SAVE_PATH, map_location=DEVICE, weights_only=True)
+        state_dict = torch.load(load_path, map_location=DEVICE, weights_only=True)
         model.load_state_dict(state_dict)
         
         model.to(DEVICE)
         model.eval()
         
-        return model
+        return model, load_path
     
     except Exception as e:
-        st.error(f"❌ Error loading model: {e}")
+        st.error(f"❌ Error loading {model_type.upper()} model: {e}")
+        st.info(
+            "This typically happens if the file contains weights for a different model architecture.\n\n"
+            f"Please verify you are loading the correct weights for model type **'{model_type.upper()}'**."
+        )
         st.stop()
 
 # --- 2. Preprocessing Function ---
@@ -105,13 +121,34 @@ st.markdown("""
 with st.sidebar:
     st.header("⚙️ Configuration")
     
+    # Model Architecture Selector
+    st.subheader("🤖 Model Selection")
+    selected_model_name = st.selectbox(
+        "Select Active Architecture",
+        options=["CheX-DS (DenseNet+Swin)", "ResNet50 (Transfer)", "Simple CNN (Baseline)"],
+        index=0,
+        help="Choose the trained model architecture to use for diagnosis."
+    )
+    
+    model_mapping = {
+        "CheX-DS (DenseNet+Swin)": "chexds",
+        "ResNet50 (Transfer)": "resnet",
+        "Simple CNN (Baseline)": "cnn"
+    }
+    model_type = model_mapping[selected_model_name]
+    
+    # Resolve weight path for display
+    expected_path = os.path.join(BASE_DIR, 'models', f'pneumonia_model_{model_type}.pth')
+    if not os.path.exists(expected_path):
+        expected_path = MODEL_SAVE_PATH
+
     # System Information
     with st.expander("🖥️ System Information", expanded=False):
         st.info(f"**Device:** {str(DEVICE).upper()}")
         st.info(f"**Python:** {sys.version.split()[0]}")
         st.info(f"**PyTorch:** {torch.__version__}")
         st.info(f"**CUDA Available:** {torch.cuda.is_available()}")
-        st.info(f"**Model Path:** `{MODEL_SAVE_PATH}`")
+        st.info(f"**Expected Weights:** `{expected_path}`")
     
     st.divider()
     
@@ -146,17 +183,28 @@ with st.sidebar:
     
     # Model Performance Info
     with st.expander("📈 Model Performance"):
-        st.markdown("""
-        **CheX-DS Metrics:**
-        - **Sensitivity:** 99%
-        - **Accuracy:** 85.26%
-        - **Test Loss:** 0.2856
-        
-        **Architecture:**
-        - DenseNet121
-        - Swin Transformer Base
-        - Learnable Ensemble Weights
-        """)
+        if model_type == "chexds":
+            st.markdown("""
+            **CheX-DS Metrics (Swin+DenseNet):**
+            - **Accuracy:** 85.90%
+            - **Test Loss:** 0.3982
+            - **Pneumonia Sensitivity:** ~99%
+            - **Ensemble Weights:** Dynamic / Learnable
+            """)
+        elif model_type == "resnet":
+            st.markdown("""
+            **ResNet50 Metrics:**
+            - **Accuracy:** 86.54%
+            - **Test Loss:** 0.5390
+            - **Pneumonia Sensitivity:** ~96%
+            """)
+        else:
+            st.markdown("""
+            **Simple CNN Metrics:**
+            - **Accuracy:** 74.52%
+            - **Test Loss:** 1.1398
+            - **Pneumonia Sensitivity:** ~95%
+            """)
 
 # --- Main Content: Two Column Layout ---
 col_left, col_right = st.columns([1, 1], gap="large")
@@ -198,9 +246,9 @@ with col_right:
     st.subheader("📋 Diagnostic Results")
     
     if uploaded_file is not None and analyze_button:
-        with st.spinner("🔄 Analyzing with CheX-DS Model..."):
+        with st.spinner(f"🔄 Analyzing with {selected_model_name}..."):
             # Load Model
-            model = load_model()
+            model, loaded_path = load_model(model_type)
             
             try:
                 # Process & Predict
@@ -276,7 +324,9 @@ with col_right:
                 
                 # Additional Information
                 with st.expander("ℹ️ Understanding the Results"):
-                    st.markdown("""
+                    sensitivity_val = "99%" if model_type == "chexds" else "96%" if model_type == "resnet" else "95%"
+                    fnr_val = "<1%" if model_type == "chexds" else "4%" if model_type == "resnet" else "5%"
+                    st.markdown(f"""
                     **How to interpret confidence levels:**
                     
                     - **High (80-100%)**: Strong agreement with training patterns
@@ -284,8 +334,8 @@ with col_right:
                     - **Low (<60%)**: Uncertain, additional evaluation needed
                     
                     **Clinical Context:**
-                    - **False Negative Rate:** <1% (Very low chance of missing pneumonia)
-                    - **Sensitivity:** 99% (Excellent at detecting pneumonia cases)
+                    - **False Negative Rate:** {fnr_val}
+                    - **Sensitivity:** {sensitivity_val} (Ability to detect positive cases)
                     - **Use Case:** Best suited for screening and triage
                     
                     **Important Notes:**
