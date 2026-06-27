@@ -3,10 +3,11 @@ import json
 import subprocess
 import sys
 import time
+import argparse
 
 # Add root folder to sys.path to enable src imports
 sys.path.append(os.path.dirname(os.path.abspath(__file__)))
-from src.config import BASE_DIR
+from src.config import BASE_DIR, DEVICE
 
 # The three models defined in our main.py
 models_to_run = [
@@ -72,6 +73,28 @@ def run_experiment(model_name):
 
 
 if __name__ == "__main__":
+    parser = argparse.ArgumentParser(description="Run Full Benchmark Suite")
+    parser.add_argument('--force', action='store_true',
+                        help="Force running experiments on CPU despite safety check warnings.")
+    args = parser.parse_args()
+
+    # CPU Safety Check
+    if DEVICE.type == 'cpu':
+        print("\n" + "!"*60)
+        print("⚠️  WARNING: NO GPU RUNTIME DETECTED (RUNNING ON CPU)")
+        print("Training all three models sequentially on CPU will take ~12 HOURS!")
+        print("This is highly likely to cause system lockup or overheating on local PCs.")
+        print("Please train models on Google Colab GPU runtime instead.")
+        print("!"*60 + "\n")
+        
+        if not args.force:
+            print("Execution aborted to protect system resources.")
+            print("To bypass this safety check and run anyway, use the '--force' flag:")
+            print("  python run_experiments.py --force\n")
+            sys.exit(0)
+        else:
+            print("⚠️ '--force' flag detected. Proceeding with CPU training...\n")
+
     print("--- Starting Full Benchmark Protocol ---")
 
     experiments_log = []

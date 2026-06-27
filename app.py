@@ -10,7 +10,7 @@ import sys
 sys.path.append(os.path.dirname(os.path.abspath(__file__)))
 
 from src.model import SimpleCNN, TransferResNet, CheXDS
-from src.config import DEVICE, MODEL_SAVE_PATH, IMG_SIZE, BASE_DIR
+from src.config import DEVICE, MODEL_SAVE_PATH, IMG_SIZE, BASE_DIR, IS_COLAB
 
 # --- Page Configuration ---
 st.set_page_config(
@@ -144,6 +144,7 @@ with st.sidebar:
 
     # System Information
     with st.expander("🖥️ System Information", expanded=False):
+        st.info(f"**Environment:** {'Google Colab ☁️' if IS_COLAB else 'Local Machine 🖥️'}")
         st.info(f"**Device:** {str(DEVICE).upper()}")
         st.info(f"**Python:** {sys.version.split()[0]}")
         st.info(f"**PyTorch:** {torch.__version__}")
