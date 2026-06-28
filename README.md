@@ -1,5 +1,13 @@
 # 🫁 Pneumonia Detection: CheX-DS Implementation (PyTorch)
 
+![Python](https://img.shields.io/badge/Python-3776AB?style=for-the-badge&logo=python&logoColor=white)
+![PyTorch](https://img.shields.io/badge/PyTorch-EE4C2C?style=for-the-badge&logo=pytorch&logoColor=white)
+![Streamlit](https://img.shields.io/badge/Streamlit-FF4B4B?style=for-the-badge&logo=streamlit&logoColor=white)
+![Docker](https://img.shields.io/badge/Docker-2496ED?style=for-the-badge&logo=docker&logoColor=white)
+![Jupyter](https://img.shields.io/badge/Jupyter-F37626?style=for-the-badge&logo=jupyter&logoColor=white)
+![Google Colab](https://img.shields.io/badge/Google_Colab-F9AB00?style=for-the-badge&logo=googlecolab&logoColor=white)
+![scikit-learn](https://img.shields.io/badge/scikit--learn-F7931E?style=for-the-badge&logo=scikit-learn&logoColor=white)
+
 ![Demo](demo.png)
 
 This project implements a state-of-the-art modular Deep Learning pipeline for detecting Pneumonia from Chest X-Rays. 
@@ -129,7 +137,7 @@ The model minimizes False Negatives (Critical for medical diagnosis).
 
 ### ROC Curve
 ROC curve for the CheX-DS model (AUC = 0.97), showing strong distinguishing between Pneumonia and Normal cases.
-![ROC Curve](results/roc_curve_chexds.png).
+![ROC Curve](results/roc_curve_chexds.png)
 
 
 ## 💻 Usage
@@ -160,8 +168,6 @@ For a user-friendly graphical dashboard, run the web app:
 ```bash
 streamlit run app.py
 ```
-
-![Streamlit Interface](demo.png)
 
 ## 🐳 Docker Support
 
