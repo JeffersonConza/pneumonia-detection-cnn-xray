@@ -69,7 +69,9 @@ python main.py --model <model>
 #   cnn     → Convolutional Neural Network
 #   resnet  → Residual Network
 #   chexds  → DenseNet + Swin Ensemble (Recommended)
+```
 
+```bash
 # Example Run
 python main.py --model chexds
 ```
@@ -81,7 +83,7 @@ python run_experiments.py
 
 ## ☁️ Google Colab (GPU Training)
 
-Since training deep learning models (especially the **CheX-DS** ensemble) takes a long time on CPU (~9.3 hours), it is highly recommended to train the models in Google Colab (taking only ~10-15 minutes using a GPU).
+Since training deep learning models (especially the **CheX-DS** ensemble) takes a long time on CPU (~9.3 hours), it is highly recommended to train the models in Google Colab (taking only ~39 minutes using a GPU).
 
 The project is configured to run on Google Colab using Google Drive for storage and Colab's local scratch disk for maximum I/O performance (bypassing Google Drive network file-reading bottlenecks).
 
@@ -103,7 +105,7 @@ The project is configured to run on Google Colab using Google Drive for storage 
 
 ## 📊 Benchmark Results
 
-We benchmarked three architectures across two hardware environments: standard CPU and optimized GPU (Google Colab Tesla T4 GPU).
+We benchmarked three architectures with optimized GPU (Google Colab Tesla T4 GPU).
 
 ### ⚡ GPU Environment Benchmarks (Google Colab T4 GPU)
 | Model | Accuracy | Test Loss | Training Time |
@@ -123,11 +125,11 @@ The CheX-DS ensemble (DenseNet121 + Swin Transformer) was evaluated on the Test 
 
 ### Confusion Matrix
 The model minimizes False Negatives (Critical for medical diagnosis).
-![Confusion Matrix](results/confusion_matrix.png)
+![Confusion Matrix](results/confusion_matrix_chexds.png)
 
 ### ROC Curve
 ROC curve for the CheX-DS model (AUC = 0.97), showing strong distinguishing between Pneumonia and Normal cases.
-![ROC Curve](results/roc_curve.png).
+![ROC Curve](results/roc_curve_chexds.png).
 
 
 ## 💻 Usage
@@ -138,6 +140,8 @@ Test the model on a random X-ray from the test set:
 ```bash
 python inference.py
 ```
+
+![Prediction Inference](prediction_inference.png)
 
 ### Visualization
 
@@ -157,7 +161,7 @@ For a user-friendly graphical dashboard, run the web app:
 streamlit run app.py
 ```
 
-![Streamlit Interface](demo_screenshot.png)
+![Streamlit Interface](demo.png)
 
 ## 🐳 Docker Support
 
