@@ -44,7 +44,8 @@ pneumonia-detection-modular/
 ├── main.py             # CLI Entry point
 ├── run_experiments.py  # Automated benchmarking script
 ├── inference.py        # Single image prediction
-└── visualize_results.py # Confusion Matrix & ROC generation
+├── visualize_results.py # Confusion Matrix & ROC generation
+└── requirements.txt    # Libraries
 ```
 
 ## 🚀 Quick Start
